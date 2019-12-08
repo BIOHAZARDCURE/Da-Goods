@@ -1,1 +1,56 @@
+package com.company;
+import java.io.*;
+import java.util.Scanner;
+import javax.swing.JOptionPane;
 
+public class Main {
+
+    public static void main(String[] args) throws FileNotFoundException {
+
+        Object[] Options = new Object[]{"Write","Clear","Exit"};
+
+        File save = new File("HardSave.txt");
+        Scanner FileRead = new Scanner(save);
+        double OldWrite = (FileRead.nextDouble());
+
+        double NewWrite = 0;
+
+
+        while (true){
+        double HoursSpent = OldWrite / 60;
+        double Days = HoursSpent / 24;
+        Scanner UserInput = new Scanner(String.valueOf(JOptionPane.showOptionDialog(null," Total Time Spent in Minutes: "+OldWrite+"\n Hours: "+HoursSpent+"\n Days: "+Days,"Choose one",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,Options,Options[2])));
+        double Choice = UserInput.nextDouble();
+
+            //READ
+            if (Choice == 0){
+                NewWrite = Write();
+                OldWrite = OldWrite + NewWrite;
+            //WRITE
+            }else if (Choice == 1){
+                OldWrite = 0;
+            //QUIT
+            }else if(Choice == 2){
+                System.out.println("Bye!");
+                break;
+            }else {
+            JOptionPane.showMessageDialog(null, "No valid selection has been made! Terminating!");
+            System.exit(1);
+            }
+            System.out.println(OldWrite);
+
+
+        }
+
+        FileOutputStream Saver2 = new FileOutputStream("HardSave.txt");
+        PrintWriter Save2 = new PrintWriter(Saver2);
+        Save2.println(OldWrite);
+        Save2.close();
+    }
+
+    public static double Write(){
+        Scanner WriteInt = new Scanner(JOptionPane.showInputDialog("Please enter a new value!"));
+        double WrittenInt = WriteInt.nextDouble();
+        return WrittenInt;
+    }
+}
