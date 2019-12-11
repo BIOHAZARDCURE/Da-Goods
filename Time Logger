@@ -7,19 +7,52 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        Object[] Options = new Object[]{"Write","Clear","Exit"};
+        Object[] Options = new Object[]{"Write","Write Week","Options","Exit"};
 
+        //Text file saving the number of minutes in a general sense
         File save = new File("HardSave.txt");
         Scanner FileRead = new Scanner(save);
         double OldWrite = (FileRead.nextDouble());
-
         double NewWrite = 0;
+
+        //Text file saving the number of minutes with context of the week
+        File Week = new File("Week.txt");
+        Scanner WeekRead = new Scanner(Week);
+        double week = (WeekRead.nextDouble()) ;
+
+        File Day = new File("Day.txt");
+        Scanner DayRead = new Scanner(Day);
+        int days = (DayRead.nextInt()) ;
+
+
 
 
         while (true){
+
+            if(days>7){
+                days=1;
+            }
+
+            String DayofWeek;
+            if(days==1){
+                DayofWeek = "Monday";
+            }else if (days==2){
+                DayofWeek = "Tuesday";
+            }else if (days==3){
+                DayofWeek = "Wednesday";
+            }else if (days==4){
+                DayofWeek = "Thursday";
+            }else if (days==5){
+                DayofWeek = "Friday";
+            }else if (days==6){
+                DayofWeek = "Saturday";
+            }else if (days==7){
+                DayofWeek = "Sunday";
+            }else DayofWeek = "MOOOOOOOO!";
+
         double HoursSpent = OldWrite / 60;
         double Days = HoursSpent / 24;
-        Scanner UserInput = new Scanner(String.valueOf(JOptionPane.showOptionDialog(null," Total Time Spent in Minutes: "+OldWrite+"\n Hours: "+HoursSpent+"\n Days: "+Days,"Choose one",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,Options,Options[2])));
+        Scanner UserInput = new Scanner(String.valueOf(JOptionPane.showOptionDialog(null,"Welcome back! || Today is... "+DayofWeek+ "\nTotal Time Spent in Minutes: "+OldWrite+"\n Hours: "+HoursSpent+"\n Days: "+Days+"\n Minutes spent this week: "+week,"Please make a selection",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,Options,Options[0])));
         double Choice = UserInput.nextDouble();
 
             //READ
@@ -27,10 +60,22 @@ public class Main {
                 NewWrite = Write();
                 OldWrite = OldWrite + NewWrite;
             //WRITE
-            }else if (Choice == 1){
-                OldWrite = 0;
-            //QUIT
+            }else if (Choice == 9) {
+              OldWrite = NukeIt(OldWrite);
+            }else if(Choice == 1){
+            Write_Week(OldWrite,days);
             }else if(Choice == 2){
+                Object[] OptionsMenu = new Object[]{"Set Day","Clear Time","Back"};
+                Scanner OptMenu = new Scanner(String.valueOf(JOptionPane.showOptionDialog(null,"Please make a selection","Options",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,OptionsMenu,OptionsMenu[2])));
+                int OptMenuSelect = OptMenu.nextInt();
+                if (OptMenuSelect == 0){
+                days=SetDay(days);
+                }else if (OptMenuSelect == 1){
+                    OldWrite = NukeIt(OldWrite);
+                }else if (OptMenuSelect == 2){
+                    continue;
+                }
+            }else if(Choice == 3){
                 System.out.println("Bye!");
                 break;
             }else {
@@ -42,10 +87,37 @@ public class Main {
 
         }
 
-        FileOutputStream Saver2 = new FileOutputStream("HardSave.txt");
-        PrintWriter Save2 = new PrintWriter(Saver2);
-        Save2.println(OldWrite);
-        Save2.close();
+        FileOutputStream DaySaver = new FileOutputStream("Day.txt");
+        PrintWriter DaySave = new PrintWriter(DaySaver);
+        days++;
+        DaySave.println(days);
+        DaySave.close();
+
+        FileOutputStream Saver = new FileOutputStream("HardSave.txt");
+        PrintWriter Save = new PrintWriter(Saver);
+        Save.println(OldWrite);
+        Save.close();
+    }
+
+
+    public static double NukeIt(double target){
+        target = 0;
+        return target;
+    }
+
+    // Basic function is there to display time spent on the "week" text file but, flesh it out more
+    //count the days using  the new file day you just made
+
+
+    public static double Write_Week(double week, int days) throws FileNotFoundException {
+
+        int x = 1;
+        System.out.println(days);
+        FileOutputStream WriteWeek = new FileOutputStream("Week.txt");
+        PrintWriter SaveWeek = new PrintWriter(WriteWeek);
+        SaveWeek.println(week);
+        SaveWeek.close();
+        return week;
     }
 
     public static double Write(){
@@ -53,4 +125,12 @@ public class Main {
         double WrittenInt = WriteInt.nextDouble();
         return WrittenInt;
     }
+
+    public static int SetDay(int Day){
+        Object setDay[] = new Object[]{"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+        Scanner setday = new Scanner(String.valueOf(JOptionPane.showOptionDialog(null,"Please select what day it is.","Set Day",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,setDay,setDay[0])));
+        Day = setday.nextInt()+1;
+        return Day;
+    }
+
 }
